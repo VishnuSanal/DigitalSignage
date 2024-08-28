@@ -40,7 +40,7 @@ fun App() {
 
     val coroutineScope = rememberCoroutineScope()
 
-    val contentList = remember { mutableStateListOf<String>("Loading...") }
+    val contentList = remember { mutableStateListOf<Announcement>(Announcement("Loading...")) }
 
     var pagerState: PagerState = rememberPagerState(pageCount = { contentList.size })
 
@@ -51,7 +51,7 @@ fun App() {
 
             if (currentPage == 0) {
                 coroutineScope.launch(Dispatchers.Default) {
-                    val response = firebaseDatabaseAPI.getNotifications()
+                    val response = firebaseDatabaseAPI.getAnnouncements()
 
                     if (response.isSuccessful && response.body() != null) {
                         contentList.clear()
@@ -108,7 +108,7 @@ fun App() {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(32.dp),
-                                text = contentList.get(page),
+                                text = contentList.get(page).title,
                                 fontFamily = fontFamily,
                                 fontSize = 44.sp,
                                 fontWeight = FontWeight.W200,
