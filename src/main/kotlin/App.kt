@@ -83,6 +83,9 @@ fun App() {
                     .background(Constants.COLOR_BG),
                 state = pagerState
             ) { page ->
+
+                val announcement = contentList.get(page)
+
                 Row(
                     modifier = Modifier
                         .fillMaxSize(),
@@ -108,7 +111,7 @@ fun App() {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(32.dp),
-                                text = contentList.get(page).title,
+                                text = announcement.title,
                                 fontFamily = fontFamily,
                                 fontSize = 44.sp,
                                 fontWeight = FontWeight.W200,
@@ -116,6 +119,20 @@ fun App() {
                                 textAlign = TextAlign.Center,
                                 color = Constants.COLOR_TEXT
                             )
+
+                            if (announcement.message != null)
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    text = announcement.message,
+                                    fontFamily = fontFamily,
+                                    fontSize = 32.sp,
+                                    fontWeight = FontWeight.W200,
+                                    lineHeight = 48.sp,
+                                    textAlign = TextAlign.Center,
+                                    color = Constants.COLOR_TEXT
+                                )
                         }
                     }
                 }
