@@ -34,7 +34,6 @@ import com.russhwolf.settings.Settings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 private val fontFamily = FontFamily(Font(resource = "poppins.ttf"))
 
@@ -46,7 +45,7 @@ fun App() {
     val coroutineScope = rememberCoroutineScope()
     val settings = Settings()
 
-    val contentList = remember { mutableStateListOf<Announcement>(Announcement("Loading...")) }
+    var contentList = remember { mutableStateListOf<Announcement>(Announcement("Loading...")) }
 
     var pagerState: PagerState = rememberPagerState(pageCount = { contentList.size })
 
@@ -56,16 +55,11 @@ fun App() {
         while (true) {
             if (currentPage == 0) {
                 coroutineScope.launch(Dispatchers.Default) {
-                    if (Utils.isInternetAvailable()) {
-                        var response: Response<List<Announcement>>? = null
 
-                        try {
-                            response = firebaseDatabaseAPI.getAnnouncements()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+                    try {
+                        val response = firebaseDatabaseAPI.getAnnouncements()
 
-                        if (response != null && response.isSuccessful && response.body() != null) {
+                        if (response.isSuccessful && response.body() != null) {
                             contentList.clear()
                             contentList.addAll(response.body()!!)
 
@@ -76,22 +70,28 @@ fun App() {
                                 )
                             )
                         }
-                    } else if (settings.hasKey(Constants.ANNOUNCEMENT_LIST_KEY)) {
-                        contentList.clear()
-                        contentList.addAll(
-                            Gson().fromJson(
-                                settings.getString(Constants.ANNOUNCEMENT_LIST_KEY, ""),
-                                object : TypeToken<ArrayList<Announcement>>() {}.type
+
+                    } catch (_: Exception) {
+
+                        System.err.println("Network fetch failed")
+
+                        if (settings.hasKey(Constants.ANNOUNCEMENT_LIST_KEY)) {
+                            contentList.clear()
+                            contentList.addAll(
+                                Gson().fromJson(
+                                    settings.getString(Constants.ANNOUNCEMENT_LIST_KEY, ""),
+                                    object : TypeToken<ArrayList<Announcement>>() {}.type
+                                )
                             )
-                        )
-                    } else {
-                        contentList.clear()
-                        contentList.add(
-                            Announcement(
-                                title = "No connection",
-                                message = "Please connect to the internet."
+                        } else {
+                            contentList.clear()
+                            contentList.add(
+                                Announcement(
+                                    title = "No connection",
+                                    message = "Please connect to the internet."
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -102,7 +102,7 @@ fun App() {
         }
     }.start()
 
-    key(contentList) { // fixme:
+    key(contentList) {
         pagerState = rememberPagerState(pageCount = { contentList.size })
     }
 
