@@ -16,6 +16,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -27,9 +28,13 @@ import androidx.compose.ui.text.platform.Font
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.russhwolf.settings.Settings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 private val fontFamily = FontFamily(Font(resource = "poppins.ttf"))
 
@@ -39,6 +44,7 @@ private val fontFamily = FontFamily(Font(resource = "poppins.ttf"))
 fun App() {
 
     val coroutineScope = rememberCoroutineScope()
+    val settings = Settings()
 
     val contentList = remember { mutableStateListOf<Announcement>(Announcement("Loading...")) }
 
@@ -48,14 +54,44 @@ fun App() {
 
     coroutineScope.launch {
         while (true) {
-
             if (currentPage == 0) {
                 coroutineScope.launch(Dispatchers.Default) {
-                    val response = firebaseDatabaseAPI.getAnnouncements()
+                    if (Utils.isInternetAvailable()) {
+                        var response: Response<List<Announcement>>? = null
 
-                    if (response.isSuccessful && response.body() != null) {
+                        try {
+                            response = firebaseDatabaseAPI.getAnnouncements()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+
+                        if (response != null && response.isSuccessful && response.body() != null) {
+                            contentList.clear()
+                            contentList.addAll(response.body()!!)
+
+                            settings.putString(
+                                Constants.ANNOUNCEMENT_LIST_KEY,
+                                Gson().toJson(
+                                    contentList
+                                )
+                            )
+                        }
+                    } else if (settings.hasKey(Constants.ANNOUNCEMENT_LIST_KEY)) {
                         contentList.clear()
-                        contentList.addAll(response.body()!!)
+                        contentList.addAll(
+                            Gson().fromJson(
+                                settings.getString(Constants.ANNOUNCEMENT_LIST_KEY, ""),
+                                object : TypeToken<ArrayList<Announcement>>() {}.type
+                            )
+                        )
+                    } else {
+                        contentList.clear()
+                        contentList.add(
+                            Announcement(
+                                title = "No connection",
+                                message = "Please connect to the internet."
+                            )
+                        )
                     }
                 }
             }
@@ -66,7 +102,9 @@ fun App() {
         }
     }.start()
 
-    pagerState = rememberPagerState(pageCount = { contentList.size })
+    key(contentList) { // fixme:
+        pagerState = rememberPagerState(pageCount = { contentList.size })
+    }
 
     MaterialTheme {
 

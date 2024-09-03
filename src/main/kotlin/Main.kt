@@ -8,9 +8,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val firebaseDatabaseAPI: FirebaseDatabaseAPI =
     Retrofit.Builder().baseUrl(Constants.DB_BASE_URL).client(
-        OkHttpClient.Builder().addInterceptor(
-            HttpLoggingInterceptor().setLevel(Constants.LOGLEVEL)
-        ).build()
+        OkHttpClient
+            .Builder()
+            .addInterceptor(
+                HttpLoggingInterceptor()
+                    .setLevel(Constants.LOGLEVEL)
+            )
+            .build()
     ).addConverterFactory(
         GsonConverterFactory.create(
             GsonBuilder().setLenient().serializeNulls().create()
@@ -18,7 +22,8 @@ val firebaseDatabaseAPI: FirebaseDatabaseAPI =
     ).build().create(FirebaseDatabaseAPI::class.java);
 
 fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
+
+Window(onCloseRequest = ::exitApplication) {
         App()
     }
 }
