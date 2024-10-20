@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
-group = "com.example"
+group = "in.ac.gecskp"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -33,10 +33,32 @@ compose.desktop {
     application {
         mainClass = "MainKt"
 
+        //      https://github.com/JetBrains/compose-multiplatform/blob/master/tutorials/Native_distributions_and_local_execution/README.md
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            includeAllModules = true
+
             packageName = "DigitalSignage"
             packageVersion = "1.0.0"
+
+            description = "GEC PKD Digital Signage System"
+            copyright = "Copyright (C) 2024 Vishnu Sanal T"
+
+//            licenseFile.set(project.file("LICENSE.txt"))
+//            macOS {
+//                iconFile.set(project.file("icon.png"))
+//            }
+//            windows {
+//                iconFile.set(project.file("icon.png"))
+//            }
+//            linux {
+//                iconFile.set(project.file("icon.png"))
+//            }
+        }
+
+        buildTypes.release.proguard {
+            obfuscate.set(true)
+            optimize.set(true)
         }
     }
 }
