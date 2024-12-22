@@ -26,11 +26,8 @@ jobs:
       - name: Build Executable
         run: ./gradlew packageReleaseUberJarForCurrentOS
 
-      - name: Debug
-        run: echo ${{ github.workspace }}
-
       - name: Upload Executable
         uses: actions/upload-artifact@v4
         with:
-          name: admin.jar
+          name: client.jar
           path: build/compose/jars/*.jar
