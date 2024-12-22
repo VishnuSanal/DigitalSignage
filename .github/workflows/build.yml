@@ -23,11 +23,20 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build Executable
+      - name: Build JAR
         run: ./gradlew packageReleaseUberJarForCurrentOS
 
-      - name: Upload Executable
+      - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
           name: client.jar
           path: build/compose/jars/*.jar
+
+      - name: Build DEB
+        run: ./gradlew packageDeb
+
+      - name: Upload DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: client.deb
+          path: build/compose/binaries/main/deb/*.deb
