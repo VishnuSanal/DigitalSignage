@@ -1,0 +1,36 @@
+name: Build Executable
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  build:
+    name: Build Executable
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build Executable
+        run: ./gradlew packageReleaseUberJarForCurrentOS
+
+      - name: Debug
+        run: echo ${{ github.workspace }}
+
+      - name: Upload Executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin.jar
+          path: build/compose/jars/*.jar
