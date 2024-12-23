@@ -17,13 +17,17 @@ val firebaseDatabaseAPI: FirebaseDatabaseAPI =
             .build()
     ).addConverterFactory(
         GsonConverterFactory.create(
-            GsonBuilder().setLenient().serializeNulls().create()
+            GsonBuilder()
+                .registerTypeAdapter(Announcement::class.java, AnnouncementAdapter())
+                .setLenient()
+                .serializeNulls()
+                .create()
         )
     ).build().create(FirebaseDatabaseAPI::class.java);
 
 fun main() = application {
 
-Window(onCloseRequest = ::exitApplication) {
+    Window(onCloseRequest = ::exitApplication) {
         App()
     }
 }
