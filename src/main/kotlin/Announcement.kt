@@ -3,4 +3,6 @@ data class Announcement(
     val message: String? = null,
     val imagePath: String? = null,
     val videoPath: String? = null,
-)
+) {
+    constructor() : this("Loading...")
+}
