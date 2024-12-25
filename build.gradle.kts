@@ -40,19 +40,19 @@ compose.desktop {
             packageName = "DigitalSignage"
             packageVersion = "1.0.0"
 
-            description = "GEC PKD Digital Signage System"
+            description = "GEC PKD Digital Signage System (Client)"
             copyright = "Copyright (C) 2024 Vishnu Sanal T"
 
-//            licenseFile.set(project.file("LICENSE.txt"))
-//            macOS {
-//                iconFile.set(project.file("icon.png"))
-//            }
-//            windows {
-//                iconFile.set(project.file("icon.png"))
-//            }
-//            linux {
-//                iconFile.set(project.file("icon.png"))
-//            }
+            licenseFile.set(project.file("LICENSE.txt"))
+            macOS {
+                iconFile.set(project.file("icon.png"))
+            }
+            windows {
+                iconFile.set(project.file("icon.png"))
+            }
+            linux {
+                iconFile.set(project.file("icon.png"))
+            }
         }
 
         buildTypes.release.proguard {
