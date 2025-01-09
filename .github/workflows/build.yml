@@ -6,8 +6,8 @@ on:
       - 'main'
 
 jobs:
-  build:
-    name: Build Executable
+  build-linux:
+    name: Build Executable on Linux
     runs-on: ubuntu-latest
 
     steps:
@@ -31,3 +31,29 @@ jobs:
         with:
           name: client.deb
           path: build/compose/binaries/main/deb/*.deb
+
+  build-windows:
+    name: Build Executable on Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build EXE
+        run: ./gradlew packageExe
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: client.exe
+          path: build/compose/binaries/main/exe/*.exe
