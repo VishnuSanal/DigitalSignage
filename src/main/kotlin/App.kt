@@ -132,8 +132,8 @@ fun App() {
                 ) {
                     Card(
                         modifier = Modifier
-                            .fillMaxSize(0.3f)
-                            .padding(8.dp)
+                            .fillMaxSize(1.0f)
+                            .padding(0.dp)
                             .aspectRatio(1f),
                         backgroundColor = Constants.COLOR_CARD,
                         elevation = 36.dp,
@@ -151,7 +151,7 @@ fun App() {
                                     .padding(32.dp),
                                 text = announcement.title,
                                 fontFamily = fontFamily,
-                                fontSize = 44.sp,
+                                fontSize = 60.sp,
                                 fontWeight = FontWeight.W200,
                                 lineHeight = 64.sp,
                                 textAlign = TextAlign.Center,
@@ -162,10 +162,10 @@ fun App() {
                                 Text(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(16.dp),
+                                        .padding(32.dp),
                                     text = announcement.message,
                                     fontFamily = fontFamily,
-                                    fontSize = 32.sp,
+                                    fontSize = 40.sp,
                                     fontWeight = FontWeight.W200,
                                     lineHeight = 48.sp,
                                     textAlign = TextAlign.Center,
