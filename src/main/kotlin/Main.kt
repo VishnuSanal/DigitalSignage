@@ -1,5 +1,7 @@
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -27,7 +29,14 @@ val firebaseDatabaseAPI: FirebaseDatabaseAPI =
 
 fun main() = application {
 
-    Window(onCloseRequest = ::exitApplication) {
+    Window(
+        title = "Digital Signage",
+        state = rememberWindowState(WindowPlacement.Fullscreen),
+        alwaysOnTop = true,
+        resizable = false,
+        undecorated = true,
+        onCloseRequest = ::exitApplication
+    ) {
         App()
     }
 }
