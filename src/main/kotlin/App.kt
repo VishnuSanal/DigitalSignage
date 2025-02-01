@@ -122,6 +122,15 @@ fun App() {
                 state = pagerState
             ) { page ->
 
+                // fix: index 0 size 0 error
+                if (contentList.isEmpty()) {
+                    contentList.add(
+                        Announcement(
+                            title = "Loading..."
+                        )
+                    )
+                }
+
                 val announcement = contentList.get(page)
 
                 Row(
