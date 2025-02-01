@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -132,9 +131,7 @@ fun App() {
                 ) {
                     Card(
                         modifier = Modifier
-                            .fillMaxSize(1.0f)
-                            .padding(0.dp)
-                            .aspectRatio(1f),
+                            .fillMaxSize(0.9f),
                         backgroundColor = Constants.COLOR_CARD,
                         elevation = 36.dp,
                         shape = RoundedCornerShape(16.dp)
@@ -151,9 +148,9 @@ fun App() {
                                     .padding(32.dp),
                                 text = announcement.title,
                                 fontFamily = fontFamily,
-                                fontSize = 60.sp,
+                                fontSize = 128.sp,
                                 fontWeight = FontWeight.W200,
-                                lineHeight = 64.sp,
+                                lineHeight = 144.sp,
                                 textAlign = TextAlign.Center,
                                 color = Constants.COLOR_TEXT
                             )
@@ -165,9 +162,9 @@ fun App() {
                                         .padding(32.dp),
                                     text = announcement.message,
                                     fontFamily = fontFamily,
-                                    fontSize = 40.sp,
+                                    fontSize = 60.sp,
                                     fontWeight = FontWeight.W200,
-                                    lineHeight = 48.sp,
+                                    lineHeight = 72.sp,
                                     textAlign = TextAlign.Center,
                                     color = Constants.COLOR_TEXT
                                 )
