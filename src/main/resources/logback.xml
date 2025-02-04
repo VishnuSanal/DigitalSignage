@@ -1,0 +1,24 @@
+<configuration>
+
+    <!-- Console Appender: Log output to the console -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss} [%level] %logger{10} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File Appender: Log output to a file -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/digitalsignage.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] %logger{10} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root Logger: Set the log level and appenders -->
+    <root level="debug">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+
+</configuration>

@@ -33,6 +33,8 @@ import com.russhwolf.settings.Settings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 private val fontFamily = FontFamily(Font(resource = "poppins.ttf"))
 
@@ -40,6 +42,10 @@ private val fontFamily = FontFamily(Font(resource = "poppins.ttf"))
 @Composable
 @Preview
 fun App() {
+
+    val logger: Logger = LoggerFactory.getLogger("DigitalSignage")
+
+    logger.info("App() init")
 
     val coroutineScope = rememberCoroutineScope()
     val settings = Settings()
@@ -63,6 +69,8 @@ fun App() {
                                 contentList.clear()
                                 contentList.addAll(response.body()!!)
 
+                                logger.info("Announcements fetched: " + contentList.toList())
+
                                 settings.putString(
                                     Constants.ANNOUNCEMENT_LIST_KEY,
                                     Gson().toJson(
@@ -77,6 +85,8 @@ fun App() {
                                     )
                                 )
 
+                                logger.info("Announcements empty")
+
                                 settings.putString(
                                     Constants.ANNOUNCEMENT_LIST_KEY,
                                     Gson().toJson(
@@ -86,9 +96,9 @@ fun App() {
                             }
                         }
 
-                    } catch (_: Exception) {
+                    } catch (e: Exception) {
 
-                        System.err.println("Network fetch failed")
+                        logger.error("Network fetch failed", e)
 
                         if (settings.hasKey(Constants.ANNOUNCEMENT_LIST_KEY)) {
                             contentList.clear()
@@ -98,7 +108,11 @@ fun App() {
                                     object : TypeToken<ArrayList<Announcement>>() {}.type
                                 )
                             )
+
+                            logger.info("Using local cache: " + contentList.toList())
                         } else {
+                            logger.info("No connection, no cache")
+
                             contentList.clear()
                             contentList.add(
                                 Announcement(
