@@ -58,16 +58,32 @@ fun App() {
                     try {
                         val response = firebaseDatabaseAPI.getAnnouncements()
 
-                        if (response.isSuccessful && response.body() != null) {
-                            contentList.clear()
-                            contentList.addAll(response.body()!!)
+                        if (response.isSuccessful) {
+                            if (response.body() != null) {
+                                contentList.clear()
+                                contentList.addAll(response.body()!!)
 
-                            settings.putString(
-                                Constants.ANNOUNCEMENT_LIST_KEY,
-                                Gson().toJson(
-                                    contentList
+                                settings.putString(
+                                    Constants.ANNOUNCEMENT_LIST_KEY,
+                                    Gson().toJson(
+                                        contentList
+                                    )
                                 )
-                            )
+                            } else {
+                                contentList.clear()
+                                contentList.add(
+                                    Announcement(
+                                        title = "No Announcements"
+                                    )
+                                )
+
+                                settings.putString(
+                                    Constants.ANNOUNCEMENT_LIST_KEY,
+                                    Gson().toJson(
+                                        contentList
+                                    )
+                                )
+                            }
                         }
 
                     } catch (_: Exception) {
