@@ -15,9 +15,10 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,14 +28,11 @@ import androidx.compose.ui.text.platform.Font
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.russhwolf.settings.Settings
-import kotlinx.coroutines.Dispatchers
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 private val fontFamily = FontFamily(Font(resource = "poppins.ttf"))
 
@@ -42,101 +40,37 @@ private val fontFamily = FontFamily(Font(resource = "poppins.ttf"))
 @Composable
 @Preview
 fun App() {
-
-    val logger: Logger = LoggerFactory.getLogger("DigitalSignage")
-
-    logger.info("App() init")
+    val mainViewModel: MainViewModel = viewModel(
+        key = "MainViewModel",
+        modelClass = MainViewModel::class,
+        factory = viewModelFactory { initializer { MainViewModel() } }
+    )
 
     val coroutineScope = rememberCoroutineScope()
-    val settings = Settings()
 
-    var contentList = remember { mutableStateListOf<Announcement>(Announcement("Loading...")) }
+    val contentList by mainViewModel.announcements.collectAsState()
 
     var pagerState: PagerState = rememberPagerState(pageCount = { contentList.size })
-
-    var currentPage = 0;
-
-    coroutineScope.launch {
-        while (true) {
-            if (currentPage == 0) {
-                coroutineScope.launch(Dispatchers.Default) {
-
-                    try {
-                        val response = firebaseDatabaseAPI.getAnnouncements()
-
-                        if (response.isSuccessful) {
-                            if (response.body() != null) {
-                                contentList.clear()
-                                contentList.addAll(response.body()!!)
-
-                                logger.info("Announcements fetched: " + contentList.toList())
-
-                                settings.putString(
-                                    Constants.ANNOUNCEMENT_LIST_KEY,
-                                    Gson().toJson(
-                                        contentList
-                                    )
-                                )
-                            } else {
-                                contentList.clear()
-                                contentList.add(
-                                    Announcement(
-                                        title = "No Announcements"
-                                    )
-                                )
-
-                                logger.info("Announcements empty")
-
-                                settings.putString(
-                                    Constants.ANNOUNCEMENT_LIST_KEY,
-                                    Gson().toJson(
-                                        contentList
-                                    )
-                                )
-                            }
-                        }
-
-                    } catch (e: Exception) {
-
-                        logger.error("Network fetch failed", e)
-
-                        if (settings.hasKey(Constants.ANNOUNCEMENT_LIST_KEY)) {
-                            contentList.clear()
-                            contentList.addAll(
-                                Gson().fromJson(
-                                    settings.getString(Constants.ANNOUNCEMENT_LIST_KEY, ""),
-                                    object : TypeToken<ArrayList<Announcement>>() {}.type
-                                )
-                            )
-
-                            logger.info("Using local cache: " + contentList.toList())
-                        } else {
-                            logger.info("No connection, no cache")
-
-                            contentList.clear()
-                            contentList.add(
-                                Announcement(
-                                    title = "No connection",
-                                    message = "Please connect to the internet."
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-
-            pagerState.animateScrollToPage(currentPage)
-            delay(Constants.SCROLL_DELAY)
-            currentPage = (currentPage + 1) % contentList.size;
-        }
-    }.start()
-
     key(contentList) {
         pagerState = rememberPagerState(pageCount = { contentList.size })
     }
 
-    MaterialTheme {
+    var currentPage = 0;
+    coroutineScope.launch {
+        while (true) {
+            pagerState.animateScrollToPage(currentPage)
+            delay(Constants.SCROLL_DELAY)
+            currentPage = (currentPage + 1) % contentList.size
+        }
+    }.start()
 
+    LaunchedEffect(pagerState) {
+        if (pagerState.currentPage == 0) {
+            mainViewModel.fetch()
+        }
+    }
+
+    MaterialTheme {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -150,15 +84,6 @@ fun App() {
                     .background(Constants.COLOR_BG),
                 state = pagerState
             ) { page ->
-
-                // fix: index 0 size 0 error
-                if (contentList.isEmpty()) {
-                    contentList.add(
-                        Announcement(
-                            title = "Loading..."
-                        )
-                    )
-                }
 
                 val announcement = contentList.get(page)
 

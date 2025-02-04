@@ -5,6 +5,8 @@ import androidx.compose.ui.window.rememberWindowState
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -27,8 +29,9 @@ val firebaseDatabaseAPI: FirebaseDatabaseAPI =
         )
     ).build().create(FirebaseDatabaseAPI::class.java);
 
-fun main() = application {
+val logger: Logger = LoggerFactory.getLogger("DigitalSignage")
 
+fun main() = application {
     Window(
         title = "Digital Signage",
         state = rememberWindowState(WindowPlacement.Fullscreen),
