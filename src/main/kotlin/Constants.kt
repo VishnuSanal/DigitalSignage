@@ -12,7 +12,7 @@ object Constants {
     const val DB_BASE_URL = "https://gedigitalsignage-gecpkd-default-rtdb.firebaseio.com//"
 
     const val SCROLL_DELAY: Long = 7_500
-//    const val SCROLL_DELAY: Long = 1_000
+//    const val SCROLL_DELAY: Long = 2_500
 
     const val ANNOUNCEMENT_LIST_KEY = "announcement_list"
 }

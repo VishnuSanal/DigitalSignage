@@ -49,19 +49,19 @@ fun App() {
         pagerState = rememberPagerState(pageCount = { contentList.size })
     }
 
+    var currentPage = 0;
     coroutineScope.launch {
+        // fixme: gets called twice
         while (true) {
+            if (currentPage == 0) {
+                mainViewModel.fetch()
+            }
+
+            pagerState.animateScrollToPage(currentPage)
             delay(Constants.SCROLL_DELAY)
-            pagerState.animateScrollToPage((pagerState.currentPage + 1) % contentList.size)
+            currentPage = (currentPage + 1) % contentList.size
         }
     }.start()
-
-//    LaunchedEffect(pagerState.currentPage) {
-//        println(pagerState.currentPage)
-//        if (pagerState.currentPage == 0) {
-//            mainViewModel.fetch()
-//        }
-//    }
 
     MaterialTheme {
         Column(
