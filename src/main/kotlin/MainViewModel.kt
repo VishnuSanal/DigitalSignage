@@ -11,7 +11,13 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
     val settings = Settings()
 
-    private val _announcements = MutableStateFlow<List<Announcement>>(emptyList())
+    private val _announcements = MutableStateFlow<List<Announcement>>(
+        listOf(
+            Announcement(
+                title = "Loading..."
+            )
+        )
+    )
     val announcements: StateFlow<List<Announcement>> = _announcements
 
     init {
@@ -19,9 +25,8 @@ class MainViewModel : ViewModel() {
         fetch()
     }
 
-    public fun fetch() {
+    fun fetch() {
         viewModelScope.launch(Dispatchers.Default) {
-
             try {
                 val response = firebaseDatabaseAPI.getAnnouncements()
 
@@ -34,7 +39,7 @@ class MainViewModel : ViewModel() {
 
                         settings.putString(
                             Constants.ANNOUNCEMENT_LIST_KEY,
-                            Gson().toJson(_announcements)
+                            Gson().toJson(_announcements.value.toList())
                         )
                     } else {
                         _announcements.value = listOf(
