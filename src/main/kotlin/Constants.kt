@@ -9,7 +9,8 @@ object Constants {
 
     val LOGLEVEL: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BASIC
 
-    const val DB_BASE_URL = "https://gedigitalsignage-gecpkd-default-rtdb.firebaseio.com//"
+    const val DB_BASE_URL = "https://digital-signage-gec-pkd-default-rtdb.firebaseio.com/"
+//    const val DB_BASE_URL = "https://gedigitalsignage-gecpkd-default-rtdb.firebaseio.com/"
 
     const val SCROLL_DELAY: Long = 7_500
 //    const val SCROLL_DELAY: Long = 2_500
