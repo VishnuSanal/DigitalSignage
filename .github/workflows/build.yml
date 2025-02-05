@@ -3,7 +3,7 @@ name: Build Executable
 on:
   push:
     branches:
-      - 'main'
+      - '*'
 
 jobs:
   build-linux:
