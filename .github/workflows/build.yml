@@ -32,28 +32,34 @@ jobs:
           name: client.deb
           path: build/compose/binaries/main/deb/*.deb
 
-  build-windows:
-    name: Build Executable on Windows
-    runs-on: windows-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          files: build/compose/binaries/main/deb/*.deb
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Build EXE
-        run: ./gradlew packageExe
-
-      - name: Upload EXE
-        uses: actions/upload-artifact@v4
-        with:
-          name: client.exe
-          path: build/compose/binaries/main/exe/*.exe
+#  build-windows:
+#    name: Build Executable on Windows
+#    runs-on: windows-latest
+#
+#    steps:
+#      - name: Checkout Code
+#        uses: actions/checkout@v4
+#
+#      - name: Set up JDK
+#        uses: actions/setup-java@v4
+#        with:
+#          distribution: 'temurin'
+#          java-version: '17'
+#
+#      - name: Setup Gradle
+#        uses: gradle/actions/setup-gradle@v4
+#
+#      - name: Build EXE
+#        run: ./gradlew packageExe
+#
+#      - name: Upload EXE
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: client.exe
+#          path: build/compose/binaries/main/exe/*.exe
