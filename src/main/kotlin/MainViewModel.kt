@@ -52,7 +52,7 @@ class MainViewModel : ViewModel() {
 
                         settings.putString(
                             Constants.ANNOUNCEMENT_LIST_KEY,
-                            Gson().toJson(_announcements)
+                            Gson().toJson(_announcements.value.toList())
                         )
                     }
                 }
