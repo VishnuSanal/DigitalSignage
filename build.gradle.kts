@@ -35,6 +35,9 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:1.2.10")
     implementation("ch.qos.logback:logback-core:1.2.10")
+
+    implementation("io.coil-kt.coil3:coil-compose:3.1.0")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.1.0")
 }
 
 compose.desktop {
