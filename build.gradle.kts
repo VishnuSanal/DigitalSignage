@@ -3,6 +3,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("jvm")
     id("org.jetbrains.compose")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 group = "in.ac.gecskp"
@@ -22,6 +23,9 @@ dependencies {
     implementation(compose.desktop.currentOs)
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
+
+//    https://developer.android.com/jetpack/androidx/releases/compose-runtime
+    runtimeOnly("androidx.compose.runtime:runtime:1.7.7")
 
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-scalars:2.11.0")
