@@ -4,11 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -25,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.platform.Font
@@ -109,9 +109,9 @@ fun App() {
                                     .padding(32.dp),
                                 text = announcement.title,
                                 fontFamily = fontFamily,
-                                fontSize = 128.sp,
+                                fontSize = if (announcement.imagePath == null) 128.sp else 60.sp, // temp hack!
                                 fontWeight = FontWeight.W200,
-                                lineHeight = 144.sp,
+                                lineHeight = if (announcement.imagePath == null) 144.sp else 72.sp, // temp hack!
                                 textAlign = TextAlign.Center,
                                 color = Constants.COLOR_TEXT
                             )
@@ -133,9 +133,10 @@ fun App() {
                             if (announcement.imagePath != null)
                                 SubcomposeAsyncImage(
                                     modifier = Modifier
-                                        .wrapContentHeight()
-                                        .wrapContentWidth()
+                                        .fillMaxWidth()
+                                        .fillMaxHeight()
                                         .padding(32.dp),
+                                    contentScale = ContentScale.Inside,
                                     model = announcement.imagePath,
                                     loading = {
                                         CircularProgressIndicator()
