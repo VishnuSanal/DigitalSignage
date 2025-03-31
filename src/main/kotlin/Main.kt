@@ -1,3 +1,5 @@
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.application
@@ -38,7 +40,14 @@ fun main() = application {
         alwaysOnTop = true,
         resizable = false,
         undecorated = true,
-        onCloseRequest = ::exitApplication
+        onCloseRequest = ::exitApplication,
+        onKeyEvent = { e ->
+            if (e.key == Key.Escape) {
+                this.exitApplication()
+                return@Window true
+            }
+            return@Window false
+        }
     ) {
         App()
     }
